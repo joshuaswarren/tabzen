@@ -393,15 +393,7 @@ Match (85%): "Getting Started with TypeScript | Official Guide"
 - www prefix removal
 - Session ID removal
 
-### 5.3 Confidence Thresholds
-
-| Detection Type | Default Threshold | Range | Rationale |
-|----------------|-------------------|-------|-----------|
-| Exact | 100% | Fixed | Binary match |
-| Canonical | 95% | Fixed | High reliability |
-| Smart | 80% | 50-100% | User configurable |
-
-### 5.4 Smart Detection Scoring
+### 5.5 Smart Detection Scoring
 
 ```
 Smart Score = (Title Similarity × 0.6) + (Domain Match × 0.3) + (Path Similarity × 0.1)
@@ -412,7 +404,7 @@ Where:
 - Path Similarity = 1 - (path edit distance / max(path_a, path_b))
 ```
 
-### 5.5 Duplicate Group Resolution
+### 5.6 Duplicate Group Resolution
 
 When grouping duplicates, the "original" tab is selected by:
 1. **Priority 1**: Currently active tab (if in group)
@@ -890,7 +882,71 @@ A release is considered **Done** when:
 
 ## Appendix A: Test Evidence Requirements
 
-### A.1 Required Test Artifacts
+### A.1 Required Test Artifacts per Feature
+
+#### F-001: Tab Inventory Display
+| Test ID | Test Description | Evidence Type | Acceptance Criteria |
+|---------|------------------|---------------|---------------------|
+| F001-T1 | Tab list renders within 500ms | Performance log | < 500ms for 100 tabs |
+| F001-T2 | Title truncation to 50 chars | Screenshot | Verified visually |
+| F001-T3 | Domain extraction accuracy | Unit test output | 100% accuracy |
+| F001-T4 | Scroll behavior with 100+ tabs | Screen recording | Smooth scroll, no jank |
+| F001-T5 | Empty state display | Screenshot | Shows helpful message |
+
+#### F-002: Exact Duplicate Detection
+| Test ID | Test Description | Evidence Type | Acceptance Criteria |
+|---------|------------------|---------------|---------------------|
+| F002-T1 | URL normalization accuracy | Unit test output | 100% match rate |
+| F002-T2 | Detection performance 100 tabs | Benchmark results | < 200ms |
+| F002-T3 | False positive rate | Test suite output | < 0.1% |
+| F002-T4 | Edge case handling (data:, about:) | Unit test output | Handled gracefully |
+| F002-T5 | Original tab selection logic | Unit test output | Follows priority rules |
+
+#### F-003: Canonical Duplicate Detection
+| Test ID | Test Description | Evidence Type | Acceptance Criteria |
+|---------|------------------|---------------|---------------------|
+| F003-T1 | Canonical URL extraction | Integration test | 90%+ accuracy |
+| F003-T2 | Missing canonical fallback | Error handling test | Falls back to exact |
+| F003-T3 | 100-site canonical test | Test suite output | 90%+ accuracy |
+| F003-T4 | Toggle on/off functionality | Settings UI test | Toggle works correctly |
+
+#### F-004: Smart Duplicate Detection
+| Test ID | Test Description | Evidence Type | Acceptance Criteria |
+|---------|------------------|---------------|---------------------|
+| F004-T1 | Levenshtein distance calculation | Unit test output | Correct calculation |
+| F004-T2 | Confidence score display | Screenshot | Shows percentage |
+| F004-T3 | Threshold filtering | Logic verification | Only shows > threshold |
+| F004-T4 | Async processing | Performance test | UI not blocked |
+| F004-T5 | 100-tab performance | Benchmark results | < 2 seconds |
+
+#### F-005: Tab Actions
+| Test ID | Test Description | Evidence Type | Acceptance Criteria |
+|---------|------------------|---------------|---------------------|
+| F005-T1 | Close all duplicates | Integration test | Correct tabs closed |
+| F005-T2 | Individual tab close | Manual test log | Tab closes correctly |
+| F005-T3 | Keep tab functionality | Manual test log | Tab excluded from bulk |
+| F005-T4 | Undo functionality | Screen recording | Restores within 5s |
+| F005-T5 | Confirmation dialog (>10 tabs) | Screenshot | Dialog appears |
+
+#### F-006: Statistics Dashboard
+| Test ID | Test Description | Evidence Type | Acceptance Criteria |
+|---------|------------------|---------------|---------------------|
+| F006-T1 | Stats accuracy | Visual QA | Matches actual state |
+| F006-T2 | Real-time updates | Real-time test | Updates within 1s |
+| F006-T3 | Memory estimation | Logic verification | Uses 50MB average |
+| F006-T4 | Persistence test | Persistence test | Survives popup close |
+
+#### F-007: Settings & Preferences
+| Test ID | Test Description | Evidence Type | Acceptance Criteria |
+|---------|------------------|---------------|---------------------|
+| F007-T1 | Settings navigation | Navigation test | Page accessible |
+| F007-T2 | Toggle functionality | UI test | All toggles work |
+| F007-T3 | Confidence slider | UI test | Range 50-100% |
+| F007-T4 | Whitelist validation | Input validation test | Patterns validated |
+| F007-T5 | Settings persistence | Persistence test | Survives restart |
+| F007-T6 | Reset to defaults | Functional test | Resets correctly |
+
+### A.2 Test Artifact Storage
 
 | Test Type | Format | Storage Location |
 |-----------|--------|------------------|
@@ -902,8 +958,10 @@ A release is considered **Done** when:
 | Accessibility audit | HTML report | Wiki |
 | UAT session recordings | Video | Secure storage |
 | Compatibility matrix | Spreadsheet | Wiki |
+| Screenshots | PNG | Wiki/Secure storage |
+| Screen recordings | MP4 | Secure storage |
 
-### A.2 Evidence Retention
+### A.3 Evidence Retention
 
 - All test artifacts retained for 1 year post-release
 - Performance baselines retained indefinitely
