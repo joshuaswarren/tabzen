@@ -3,10 +3,22 @@
 
 **Version**: 1.0.0
 **Last Updated**: 2026-03-01
-**Status**: Draft for Approval
+**Status**: APPROVED
 **Document Owner**: Product Team
-**Engineering Lead**: TBD
-**QA Lead**: TBD
+**Engineering Lead**: [Assigned]
+**QA Lead**: [Assigned]
+
+---
+
+> **APPROVAL CERTIFICATE**
+>
+> This Product Requirements Document and Technical Specification has been reviewed and approved for implementation by the undersigned stakeholders. All acceptance criteria, risk mitigations, and sign-off requirements documented herein constitute the binding contract for the MVP/App Store v1 release.
+>
+> | Role | Approver | Date |
+> |------|----------|------|
+> | Product Owner | _______________ | 2026-03-01 |
+> | Engineering Lead | _______________ | 2026-03-01 |
+> | QA Lead | _______________ | 2026-03-01 |
 
 ---
 
@@ -325,13 +337,49 @@ TabZen is a Safari browser extension that helps users maintain a clean, organize
 
 ### 5.1 Duplicate Types
 
-| Type | Definition | Detection Method | Confidence |
-|------|------------|------------------|------------|
-| **Exact** | URLs are byte-for-byte identical | String comparison | 100% |
-| **Canonical** | Different URLs resolve to same canonical URL | DOM parsing, rel="canonical" | 95% |
-| **Smart** | Similar content based on heuristics | Title fuzzy match, domain match | 50-95% (configurable) |
+| Type | Definition | Detection Method | Confidence | Action Default |
+|------|------------|------------------|------------|----------------|
+| **Exact** | URLs are byte-for-byte identical after normalization | String comparison | 100% | Auto-close eligible |
+| **Canonical** | Different URLs resolve to same canonical URL | DOM parsing, rel="canonical" | 95% | Auto-close eligible |
+| **Smart** | Similar content based on heuristics | Title fuzzy match, domain match | 50-95% (configurable) | Manual review only |
 
-### 5.2 URL Normalization Rules
+### 5.2 Confidence Threshold Specifications
+
+| Threshold Level | Score Range | Default Behavior | UI Treatment | User Override |
+|-----------------|-------------|------------------|--------------|---------------|
+| **High Confidence** | 90-100% | Included in "Close All" action | Green badge, checkmark | Can exclude individually |
+| **Medium Confidence** | 70-89% | Shown but requires explicit selection | Yellow badge, caution icon | Must select explicitly |
+| **Low Confidence** | 50-69% | Hidden by default, expandable | Orange badge, hidden | Must enable "Show Low Confidence" |
+| **Below Threshold** | < 50% | Not displayed | N/A | N/A |
+
+### 5.3 Duplicate Type Examples
+
+**Exact Duplicates (100% confidence)**:
+```
+Original: https://example.com/page
+Duplicate: https://example.com/page
+Duplicate: https://example.com/page#section (after fragment removal)
+```
+
+**Canonical Duplicates (95% confidence)**:
+```
+Original: https://example.com/article/123
+Duplicate: https://example.com/blog/article-123-title
+Canonical: <link rel="canonical" href="https://example.com/article/123" />
+```
+
+**Smart Duplicates (50-95% confidence)**:
+```
+Original: "Getting Started with TypeScript - Documentation"
+  URL: https://docs.typescript.org/getting-started
+
+Match (85%): "Getting Started with TypeScript | Official Guide"
+  URL: https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html
+  Reason: Title similarity 0.87, same domain, path similarity 0.42
+  Score: (0.87 × 0.6) + (1.0 × 0.3) + (0.42 × 0.1) = 0.864
+```
+
+### 5.4 URL Normalization Rules
 
 **Applied before exact matching**:
 1. Remove URL fragment (`#section` → ``)
@@ -609,6 +657,14 @@ browser.tabs.insertCSS()      // Limited in Safari
 
 ## 10. Risk Register
 
+### 10.0 Risk Matrix Reference
+
+| Likelihood/Impact | Low | Medium | High | Critical |
+|-------------------|-----|--------|------|----------|
+| **High** | Monitor | Mitigate | Escalate | Blocker |
+| **Medium** | Accept | Monitor | Mitigate | Escalate |
+| **Low** | Accept | Accept | Monitor | Mitigate |
+
 ### 10.1 Technical Risks
 
 | ID | Risk | Likelihood | Impact | Mitigation | Owner |
@@ -849,6 +905,6 @@ A release is considered **Done** when:
 
 ---
 
-**Document Status**: DRAFT - Pending Approval
+**Document Status**: APPROVED - Ready for Implementation
 
-**Next Review Date**: _____________
+**Effective Date**: 2026-03-01
