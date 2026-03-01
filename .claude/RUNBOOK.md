@@ -31,13 +31,28 @@ If `/root/repos/tabzen` is unavailable:
 3. If missing, re-bootstrap using steps above
 
 ### Remote Configuration
-Currently no remote is configured. To add a remote:
-```bash
-git remote add origin <repository-url>
-git push -u origin main
-```
+**Status**: Not configured (local-only repository)
+
+The remote GitHub repository URL is not yet configured. This is a known limitation.
+
+**Blocker**: GitHub CLI (`gh`) is not authenticated on CT130 runner.
+- **Remediation Owner**: System administrator / DevOps
+- **Steps to resolve**:
+  1. Run `gh auth login` on the runner host
+  2. Or set `GH_TOKEN` environment variable with a valid GitHub PAT
+  3. Then configure remote: `git remote add origin git@github.com:<org>/tabzen.git`
+
+**Current Behavior**: Repository functions as local-only git repo. All commits are local until remote is configured and pushed.
 
 ## Claude Runner Notes
 - Repository is ready for coding tasks
 - All future TabZen development should use this canonical path
 - Previous fallback to `/root/repos` should no longer be necessary
+
+## Verification Checklist
+- [x] Directory exists at `/root/repos/tabzen`
+- [x] Git repository initialized
+- [x] Default branch is `main`
+- [x] Write permissions confirmed for runner user
+- [ ] Remote configured (blocked - requires GitHub auth)
+- [x] Runbook documented
