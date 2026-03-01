@@ -11,8 +11,9 @@ The TabZen repository has been bootstrapped at `/root/repos/tabzen` for Claude R
 ### Current State
 - **Path**: `/root/repos/tabzen` (canonical)
 - **Branch**: `main` (default)
-- **Commits**: Local commits only
-- **Remote**: Not configured (requires GitHub auth)
+- **Remote**: `git@github.com:joshuaswarren/tabzen.git`
+- **GitHub**: https://github.com/joshuaswarren/tabzen
+- **Status**: Fully operational
 
 ### Fallback Policy
 1. **Primary**: Always use `/root/repos/tabzen` for TabZen development
@@ -23,11 +24,14 @@ The TabZen repository has been bootstrapped at `/root/repos/tabzen` for Claude R
 3. **Previous fallback** to `/root/repos` is deprecated
 
 ### Known Blockers
-| Issue | Status | Owner | Resolution |
-|-------|--------|-------|------------|
-| GitHub remote not configured | Blocked | DevOps | Authenticate `gh` CLI or set `GH_TOKEN` |
+No current blockers. Repository is fully operational.
 
-### Next Steps
-1. Configure GitHub authentication on CT130 runner
-2. Create/configure remote repository
-3. Push local commits to remote
+### Resolved Issues
+| Issue | Resolution | Date |
+|-------|------------|------|
+| GitHub remote not configured | Resolved by setting `GH_TOKEN` env var and using SSH for git operations | 2026-03-01 |
+
+### Authentication Notes
+- GitHub CLI requires `GH_TOKEN` environment variable to be set
+- Token stored in `~/.config/gh/hosts.yml` but not auto-loaded
+- Git operations use SSH (`git@github.com:`) which works via `~/.ssh/id_rsa`

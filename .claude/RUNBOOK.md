@@ -31,18 +31,13 @@ If `/root/repos/tabzen` is unavailable:
 3. If missing, re-bootstrap using steps above
 
 ### Remote Configuration
-**Status**: Not configured (local-only repository)
+**Status**: ✅ Configured
 
-The remote GitHub repository URL is not yet configured. This is a known limitation.
+- **Remote URL**: `git@github.com:joshuaswarren/tabzen.git`
+- **GitHub Repo**: https://github.com/joshuaswarren/tabzen
+- **Authentication**: SSH (using ~/.ssh/id_rsa)
 
-**Blocker**: GitHub CLI (`gh`) is not authenticated on CT130 runner.
-- **Remediation Owner**: System administrator / DevOps
-- **Steps to resolve**:
-  1. Run `gh auth login` on the runner host
-  2. Or set `GH_TOKEN` environment variable with a valid GitHub PAT
-  3. Then configure remote: `git remote add origin git@github.com:<org>/tabzen.git`
-
-**Current Behavior**: Repository functions as local-only git repo. All commits are local until remote is configured and pushed.
+The remote was configured after resolving GitHub CLI authentication by setting `GH_TOKEN` environment variable and using SSH for git operations.
 
 ## Claude Runner Notes
 - Repository is ready for coding tasks
@@ -54,5 +49,5 @@ The remote GitHub repository URL is not yet configured. This is a known limitati
 - [x] Git repository initialized
 - [x] Default branch is `main`
 - [x] Write permissions confirmed for runner user
-- [ ] Remote configured (blocked - requires GitHub auth)
+- [x] Remote configured and pushed to GitHub
 - [x] Runbook documented
