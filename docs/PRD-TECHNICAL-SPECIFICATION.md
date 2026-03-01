@@ -679,11 +679,38 @@ browser.tabs.insertCSS()      // Limited in Safari
 
 | ID | Risk | Likelihood | Impact | Mitigation | Owner |
 |----|------|------------|--------|------------|-------|
-| PR-01 | Apple rejects extension due to privacy concerns | Medium | Critical | Privacy manifest; data minimization; local-only processing | Product |
-| PR-02 | User data exposed through storage | Low | Critical | Encrypt sensitive data; no PII storage | Eng |
-| PR-03 | Extension accesses sensitive URLs (banking, etc.) | High | Medium | Clear disclosure; URL pattern exclusion | Product |
-| PR-04 | Apple policy change affects distribution | Low | High | Monitor policy updates; maintain compliance | Product |
-| PR-05 | GDPR/CCPA compliance requirements | Medium | Medium | Local-only data; no tracking; clear privacy policy | Legal |
+| PR-01 | Apple rejects extension due to privacy concerns | Medium | Critical | **Required Actions**: (1) Complete Privacy Manifest; (2) Document all data collection in App Store Connect; (3) Implement data minimization; (4) Local-only processing with no network calls; (5) Provide clear privacy policy URL | Product |
+| PR-02 | User data exposed through storage | Low | Critical | **Required Actions**: (1) Use Safari's encrypted storage API; (2) No PII storage - only tab metadata; (3) Implement secure deletion on uninstall; (4) No credentials or sensitive data in storage | Eng |
+| PR-03 | Extension accesses sensitive URLs (banking, etc.) | High | Medium | **Required Actions**: (1) Clear disclosure in App Store description; (2) Provide URL pattern exclusion feature (F-007); (3) Default exclude common banking/healthcare patterns; (4) User control to disable detection per-domain | Product |
+| PR-04 | Apple policy change affects distribution | Low | High | **Required Actions**: (1) Subscribe to Apple Developer news; (2) Monitor WebKit/Safari release notes; (3) Maintain 30-day compliance buffer; (4) Design for API stability over bleeding-edge features | Product |
+| PR-05 | GDPR/CCPA compliance requirements | Medium | Medium | **Required Actions**: (1) Local-only data processing - no data leaves device; (2) No tracking or analytics collection; (3) Clear privacy policy stating zero data collection; (4) User data export feature; (5) Complete data deletion on uninstall | Legal |
+| PR-06 | Safari Extension sandbox restrictions | Medium | High | **Required Actions**: (1) Test with sandbox enabled from day one; (2) No file system access; (3) Use only approved Safari APIs; (4) Bundle all dependencies; (5) No dynamic code loading | Eng |
+| PR-07 | App Store review rejection for permissions | Medium | High | **Required Actions**: (1) Request minimum required permissions; (2) Document permission justification in submission; (3) `tabs` permission only for URL reading; (4) `storage` for settings only; (5) No optional permissions | Product |
+| PR-08 | Hardened Runtime incompatibility | Low | Critical | **Required Actions**: (1) Test notarization early in development; (2) No JIT compilation; (3) No unsigned binaries; (4) Use Apple-approved libraries only | Eng |
+
+### 10.2.1 Apple App Store Compliance Checklist
+
+| Requirement | Status | Evidence Required |
+|-------------|--------|-------------------|
+| App Sandbox enabled | Required | Xcode build setting |
+| Hardened Runtime enabled | Required | Xcode build setting |
+| Code Signing certificate | Required | Apple Developer cert |
+| Notarization passed | Required | Notarization ticket |
+| Privacy Manifest (com.apple.privacy.plist) | Required | Manifest file |
+| Data Collection disclosure in App Store Connect | Required | Screenshot of submission |
+| Minimum macOS version: 11.0 | Required | Info.plist |
+| Safari version support: 14+ | Required | Manifest.json |
+| No network requests | Required | Network log analysis |
+| No third-party analytics | Required | Code audit |
+
+### 10.2.2 Privacy Manifest Requirements
+
+The extension MUST include a Privacy Manifest with the following declarations:
+
+- **NSPrivacyTracking**: false
+- **NSPrivacyTrackingDomains**: empty array
+- **NSPrivacyCollectedDataTypes**: BrowsingHistory (not linked, not tracking, for AppFunctionality)
+- **NSPrivacyAccessedAPITypes**: FileTimestamp (reason C617.1)
 
 ### 10.3 User Experience Risks
 
